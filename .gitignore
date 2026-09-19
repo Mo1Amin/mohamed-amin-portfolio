@@ -8,6 +8,7 @@ build/
 !.env.example
 coverage/
 .vercel/
+.worktrees/
 *.log
 *.tmp
 *.cache
@@ -21,4 +22,3 @@ Thumbs.db
 # Generated media and exports
 public/uploads/
 artifacts/
-
