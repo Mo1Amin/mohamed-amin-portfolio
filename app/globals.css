@@ -1,0 +1,328 @@
+@import 'tailwindcss';
+
+/*
+  Design tokens for the Bold direction.
+
+  Two axes, both set as attributes on <html>:
+  - data-theme: dark (default) | light
+  - data-mode:  bold (default) | calm
+
+  Components only ever reference semantic tokens, so switching either axis never
+  requires touching component code.
+*/
+
+@custom-variant calm {
+  &:where([data-mode='calm'] *) {
+    @slot;
+  }
+}
+
+@custom-variant bold {
+  &:where([data-mode='bold'] *) {
+    @slot;
+  }
+}
+
+@custom-variant light-theme {
+  &:where([data-theme='light'] *) {
+    @slot;
+  }
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-deep: var(--canvas-deep);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--text-primary);
+  --color-muted: var(--text-secondary);
+  --color-faint: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-signal: var(--signal);
+  --color-signal-fg: var(--signal-fg);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+
+  --font-display: var(--font-display-family);
+  --font-sans: var(--font-body-family);
+  --font-mono: var(--font-mono-family);
+
+  --radius-card: var(--radius-lg);
+  --radius-chip: var(--radius-sm);
+}
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --canvas: #05070f;
+  --canvas-deep: #02030a;
+  --surface: #0a0e1b;
+  --surface-2: #111828;
+  --text-primary: #f1f3f9;
+  --text-secondary: #9aa6c2;
+  --text-muted: #6d7894;
+  --accent: #4d8dff;
+  --accent-fg: #040711;
+  --accent-soft: rgb(77 141 255 / 0.14);
+  --signal: #cbff4d;
+  --signal-fg: #0a1400;
+  --border: rgb(180 200 255 / 0.12);
+  --border-strong: rgb(180 200 255 / 0.26);
+  --grid-line: rgb(150 180 255 / 0.07);
+  --glow: 0 0 60px rgb(77 141 255 / 0.28);
+  --shadow-panel: 0 30px 80px -50px rgb(0 0 0 / 0.9);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --canvas: #f7f6f3;
+  --canvas-deep: #edebe5;
+  --surface: #ffffff;
+  --surface-2: #f2f4f9;
+  --text-primary: #0b1020;
+  --text-secondary: #4c5a78;
+  --text-muted: #6b7794;
+  --accent: #1350d8;
+  --accent-fg: #ffffff;
+  --accent-soft: rgb(19 80 216 / 0.09);
+  --signal: #4a7300;
+  --signal-fg: #ffffff;
+  --border: rgb(11 16 32 / 0.12);
+  --border-strong: rgb(11 16 32 / 0.26);
+  --grid-line: rgb(11 16 32 / 0.06);
+  --glow: 0 0 50px rgb(19 80 216 / 0.16);
+  --shadow-panel: 0 24px 60px -45px rgb(11 16 32 / 0.45);
+}
+
+:root {
+  /* next/font injects the three custom properties referenced here. */
+  --font-display-family: var(--font-display-latin), var(--font-body-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-body-family: var(--font-body-arabic), var(--font-display-latin), ui-sans-serif, system-ui, sans-serif;
+  --font-mono-family: var(--font-mono-latin), var(--font-body-arabic), ui-monospace, monospace;
+
+  --radius-lg: 20px;
+  --radius-sm: 999px;
+  --display-tracking: -0.045em;
+  --display-weight: 700;
+  --section-space: clamp(5rem, 11vw, 9.5rem);
+  --shell-padding: clamp(1.25rem, 5vw, 4rem);
+  --grid-size: 68px;
+  --backdrop-strength: 1;
+}
+
+[data-mode='calm'] {
+  --radius-lg: 10px;
+  --radius-sm: 8px;
+  --display-tracking: -0.015em;
+  --display-weight: 600;
+  --section-space: clamp(4rem, 8vw, 7rem);
+  --grid-size: 120px;
+  --backdrop-strength: 0.35;
+  --glow: none;
+}
+
+[data-mode='calm'][data-theme='dark'] {
+  --canvas: #080b14;
+  --surface: #0d1220;
+  --accent: #7ba7ff;
+  --signal: #b9e07a;
+}
+
+[data-mode='calm'][data-theme='light'] {
+  --canvas: #fbfbfa;
+  --accent: #1a4fb5;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--text-primary);
+    font-family: var(--font-body-family);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Arabic display type must not inherit the tight Latin tracking, and Arabic
+     glyphs need more room per line than the Latin display leading allows. */
+  html[lang='ar'] {
+    --display-tracking: 0em;
+    --display-leading-hero: 1.28;
+    --display-leading-section: 1.3;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display-family);
+    font-weight: var(--display-weight);
+    letter-spacing: var(--display-tracking);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: var(--shell-padding);
+  }
+
+  .prose-measure {
+    max-width: 68ch;
+  }
+
+  .display-hero {
+    font-size: clamp(2.6rem, 8.2vw, 6.75rem);
+    line-height: var(--display-leading-hero, 0.95);
+  }
+
+  [data-mode='calm'] .display-hero {
+    font-size: clamp(2.2rem, 5.4vw, 4rem);
+    line-height: var(--display-leading-hero, 1.08);
+  }
+
+  .display-section {
+    font-size: clamp(2rem, 4.6vw, 3.75rem);
+    line-height: var(--display-leading-section, 1.02);
+  }
+
+  [data-mode='calm'] .display-section {
+    font-size: clamp(1.6rem, 3vw, 2.5rem);
+    line-height: var(--display-leading-section, 1.12);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono-family);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  html[lang='ar'] .eyebrow {
+    letter-spacing: 0.08em;
+  }
+
+  .panel {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .hairline {
+    border-block-start: 1px solid var(--border);
+  }
+
+  /* The blueprint grid behind full-bleed moments. */
+  .grid-backdrop {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 100%);
+    opacity: var(--backdrop-strength);
+  }
+
+  /* Bold-only detail: engineering drawing corner ticks around a panel. */
+  .corner-ticks {
+    position: relative;
+  }
+
+  .corner-ticks::before,
+  .corner-ticks::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--accent);
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  .corner-ticks::before {
+    inset-block-start: -1px;
+    inset-inline-start: -1px;
+    border-block-start: 1px solid;
+    border-inline-start: 1px solid;
+  }
+
+  .corner-ticks::after {
+    inset-block-end: -1px;
+    inset-inline-end: -1px;
+    border-block-end: 1px solid;
+    border-inline-end: 1px solid;
+  }
+
+  [data-mode='calm'] .corner-ticks::before,
+  [data-mode='calm'] .corner-ticks::after {
+    content: none;
+  }
+
+  .accent-underline {
+    background-image: linear-gradient(to right, var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 2px;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glow-accent {
+    box-shadow: var(--glow);
+  }
+
+  [data-mode='calm'] .glow-accent {
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

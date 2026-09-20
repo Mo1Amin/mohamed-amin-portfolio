@@ -22,3 +22,6 @@ Thumbs.db
 # Generated media and exports
 public/uploads/
 artifacts/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
