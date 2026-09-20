@@ -19,6 +19,8 @@ export function AdminView() {
   const [saved, setSaved] = useState(false);
   const [remoteStatus, setRemoteStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [remoteError, setRemoteError] = useState('');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [mediaStatus, setMediaStatus] = useState<'idle' | 'uploading' | 'uploaded' | 'error'>('idle');
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
   useEffect(() => {
@@ -52,6 +54,29 @@ export function AdminView() {
     } catch (error) {
       setRemoteStatus('error');
       setRemoteError(error instanceof Error ? error.message : 'Unable to save to Supabase.');
+    }
+  };
+  const uploadMedia = async () => {
+    if (!mediaFile) return;
+    setMediaStatus('uploading');
+    setRemoteError('');
+    const form = new FormData();
+    form.set('file', mediaFile);
+    form.set('slug', selected.slug);
+    form.set('kind', mediaFile.type.startsWith('video/') ? 'video' : 'image');
+    form.set('altEn', selected.title.en);
+    form.set('altAr', selected.title.ar);
+    form.set('altSv', selected.title.sv);
+    try {
+      const response = await fetch('/api/admin/media', { method: 'POST', body: form });
+      const result = await response.json() as { error?: string; media?: { id: string; url: string; kind: 'image' | 'video' } };
+      if (!response.ok || !result.media) throw new Error(result.error ?? 'Unable to upload media.');
+      updateSelected({ media: [...selected.media, { id: result.media.id, url: result.media.url, type: result.media.kind, alt: { en: selected.title.en, ar: selected.title.ar, sv: selected.title.sv } }] });
+      setMediaFile(null);
+      setMediaStatus('uploaded');
+    } catch (error) {
+      setMediaStatus('error');
+      setRemoteError(error instanceof Error ? error.message : 'Unable to upload media.');
     }
   };
   const resetDraft = () => { window.localStorage.removeItem(draftKey); setProjects(cloneCatalog()); setSaved(false); };
@@ -97,6 +122,7 @@ export function AdminView() {
           <label>Live link<input type="url" placeholder="https://..." value={selected.links.live ?? ''} onChange={(event) => updateSelected({ links: { ...selected.links, live: event.target.value || undefined } })} /></label>
         </div>
         <div className="editor-foot"><label className="check-row"><input type="checkbox" checked={selected.featured} onChange={(event) => updateSelected({ featured: event.target.checked })} /> Featured project</label><span>{remoteStatus === 'error' ? remoteError : remoteStatus === 'saved' ? 'Saved to Supabase.' : saved ? 'Draft saved in this browser.' : 'Unsaved local changes.'}</span></div>
+        <div className="media-editor"><div><p className="eyebrow">PROJECT MEDIA</p><p className="media-help">Upload an image or video after saving this project to Supabase. Files are limited to 10 MB.</p></div><div className="media-actions"><input type="file" accept="image/*,video/*" onChange={(event) => { setMediaFile(event.target.files?.[0] ?? null); setMediaStatus('idle'); }} /><button className="text-link" onClick={uploadMedia} disabled={!mediaFile || mediaStatus === 'uploading'}>{mediaStatus === 'uploading' ? 'Uploading…' : 'Upload media'} ↗</button></div>{selected.media.length > 0 && <ul className="media-list">{selected.media.map((media) => <li key={media.id}><a href={media.url} target="_blank" rel="noreferrer">{media.type} · {media.url}</a></li>)}</ul>}{mediaStatus === 'error' && <p className="auth-error">{remoteError}</p>}{mediaStatus === 'uploaded' && <p className="media-success">Media uploaded. Save the project again to keep the local draft in sync.</p>}</div>
       </article>
     </section>
     <footer><Link className="text-link" href="/">← Back to portfolio</Link><p>Admin foundation · local draft mode</p></footer>
