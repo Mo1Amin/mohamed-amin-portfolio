@@ -18,4 +18,7 @@ that rule in the database and gives write access only to the authenticated
 owner of each project.
 
 The next integration step is to replace the local admin draft actions with
-authenticated server mutations and Supabase Storage uploads.
+authenticated server mutations and Supabase Storage uploads. The current branch
+adds the first authentication layer: `/admin/login`, the OAuth callback route,
+and middleware that protects `/admin` whenever Supabase environment variables
+are present. Without those variables, local preview mode remains available.

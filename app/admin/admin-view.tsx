@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { RouteControls } from '../route-controls';
 import { projectCatalog, projectStatusLabels, type ProjectContent, type ProjectStatus } from '../content-model';
+import { createSupabaseBrowserClient } from '../lib/supabase/client';
 
 const draftKey = 'amin-portfolio-admin-drafts-v1';
 const statusOptions: ProjectStatus[] = ['published', 'coming_soon', 'private', 'in_development'];
@@ -16,6 +17,7 @@ export function AdminView() {
   const [projects, setProjects] = useState<ProjectContent[]>(cloneCatalog);
   const [selectedId, setSelectedId] = useState(projectCatalog[0].id);
   const [saved, setSaved] = useState(false);
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(draftKey);
@@ -34,12 +36,13 @@ export function AdminView() {
     setSaved(true);
   };
   const resetDraft = () => { window.localStorage.removeItem(draftKey); setProjects(cloneCatalog()); setSaved(false); };
+  const signOut = async () => { if (supabase) await supabase.auth.signOut(); window.location.assign('/admin/login'); };
 
   return <main className="admin-page">
     <header className="route-header admin-header">
       <Link className="brand" href="/" aria-label="Mohamed Amin">ma<span>↗</span></Link>
       <div className="admin-heading"><span className="eyebrow"><span className="dot" />CONTENT WORKSPACE</span><strong>Admin foundation</strong></div>
-      <RouteControls />
+      <div className="admin-header-actions"><RouteControls />{supabase && <button className="text-link" onClick={signOut}>Sign out</button>}</div>
     </header>
 
     <section className="admin-intro">
