@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { projectIndexOf, slugs } from '../../projects-data';
-import { routeCopy } from '../../route-copy';
+import { projectIndexOf, projectEntries, slugs } from '../../projects-data';
 import { defaultLocale } from '../../settings';
 import { CaseView } from './case-view';
 
@@ -17,8 +16,8 @@ export async function generateMetadata({params}:{params:Promise<{slug:string}>})
  if(index<0)return {title:'Project — Mohamed Amin'};
  // Metadata is produced before the reader's language is known, so it uses the
  // default locale — the same one the document is first rendered with.
- const r=routeCopy[defaultLocale];
- return {title:`${r.indexTitles[index]} — Mohamed Amin`,description:r.caseSummaries[index]};
+ const project = projectEntries[index];
+ return {title:`${project.content.title[defaultLocale]} — Mohamed Amin`,description:project.content.shortSummary[defaultLocale]};
 }
 
 export default async function ProjectPage({params}:{params:Promise<{slug:string}>}){

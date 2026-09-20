@@ -13,6 +13,10 @@ storage are still pending.
 - Saves drafts to browser `localStorage` only.
 - Keeps the public routes backed by their existing curated presentation data.
 
+The public routes now consume the same `projectCatalog` records for titles,
+summaries, roles, case notes, technologies, and publication filtering. Private
+records are excluded before the route layer receives them.
+
 ## Before production use
 
 - Add Supabase authentication and restrict the route to the owner.
