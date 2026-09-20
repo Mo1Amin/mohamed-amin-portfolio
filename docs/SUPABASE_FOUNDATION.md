@@ -7,7 +7,10 @@ content fallback working until a Supabase project is connected.
 ## Setup
 
 1. Create a Supabase project and copy `.env.example` to `.env.local`.
-2. Fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+2. Fill `NEXT_PUBLIC_SUPABASE_URL` and the browser-safe
+   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from Supabase Settings → API Keys.
+   The legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` remains supported as a fallback;
+   never put a secret or service-role key in a `NEXT_PUBLIC_` variable.
 3. Apply `supabase/migrations/001_initial_schema.sql` and then
    `supabase/migrations/002_storage.sql` in the Supabase SQL editor.
 4. Create the owner account in Supabase Auth, then seed projects with its user ID.
