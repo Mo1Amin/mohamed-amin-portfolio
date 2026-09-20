@@ -1,16 +1,27 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { slugs } from '../../projects-data';
 import { getPublicProjectEntries } from '../../projects-data-server';
 import { defaultLocale } from '../../settings';
 import { CaseView } from './case-view';
 
-export function generateStaticParams(){return slugs.map(slug=>({slug}))}
+/**
+ * The routes that exist are the ones a visitor is allowed to see, taken from
+ * the same visible-only query the pages use. A private project has no route at
+ * all, so it cannot be reached even by guessing the slug.
+ */
+export async function generateStaticParams(){
+ const projects=await getPublicProjectEntries();
+ return projects.map((project)=>({slug:project.slug}));
+}
 
-// Without this an unknown slug was rendered on demand and cached, so a missing
-// project answered 200 OK with the not-found screen inside it. Now anything
-// outside the known slugs is a real 404.
+// Anything outside those slugs is a real 404 rather than a 200 carrying the
+// not-found screen. This only holds while the route stays statically rendered,
+// which is why public content is read without cookies.
 export const dynamicParams=false;
+
+// Content edited in the admin workspace appears within a minute. A brand new
+// project still needs a deploy, because its route is generated at build time.
+export const revalidate=60;
 
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
  const {slug}=await params; const projects=await getPublicProjectEntries(); const index=projects.findIndex((project) => project.slug === slug);

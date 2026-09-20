@@ -51,6 +51,18 @@ went through the Supabase CLI's management connection.
    confirmed yet.
 3. The three private projects are seeded on purpose. Row-level security is what
    hides them, and an empty table would not prove that.
+4. Public content is now read through a cookie-free client
+   (`app/lib/supabase/public-client.ts`). The cookie-aware server client made
+   every public route dynamic, and a dynamic route behind `loading.tsx` streams
+   its response — the `200` header goes out before `notFound()` runs, so a
+   private or missing project answered **200 OK** with the not-found screen
+   inside it. Public reads need no session, so the public pages are statically
+   rendered again and `/projects/flight-web` is a real `404`.
+5. The routes that exist are generated from the visible-only query, so a private
+   project has no route at all, and the landing page reads the same data as the
+   projects routes instead of the checked-in catalog. Both revalidate after a
+   minute (`export const revalidate = 60`), so an edit in the admin workspace
+   reaches the public site without a deploy.
 
 Re-run either step at any time:
 
@@ -89,12 +101,20 @@ Anonymous, through the anon key (`npm run verify:supabase`, 6/6 passing):
 
 Through the running application:
 
-- `/projects` renders the seeded titles from the database, and neither private
-  project appears in the markup;
+- the landing page and `/projects` render the seeded titles from the database,
+  and none of the three private projects appears in either page's markup;
+- `/projects/flight-web`, `/projects/speed-store`, `/projects/spark-motors` and
+  an invented slug all answer `404`, while the four visible projects answer
+  `200`;
 - a case-study page shows the status stored in the database;
 - `/admin` redirects to `/admin/login` when there is no session;
 - `PUT /api/admin/projects` and `POST /api/admin/media` answer `401` rather than
   `503`, which means Supabase is configured and the auth gate is what refused.
+
+End to end, with the data restored afterwards: a title written to the database
+as the owner appeared on `/projects` about twenty seconds later, and re-running
+the seed put the original value back. That is the whole chain — owner write,
+row-level security, public query, rendered page.
 
 Owner permissions, checked against the policies inside a transaction that was
 rolled back afterwards (so no data changed):
@@ -117,6 +137,9 @@ rolled back afterwards (so no data changed):
    empty because nothing has been confirmed.
 4. **Set the same two environment variables on the deployment host** before
    going live, or the site silently falls back to the checked-in catalog.
+5. **Redeploy after adding a brand new project.** Editing an existing project
+   shows up within a minute, but a new slug needs a build for its route to
+   exist — that is the price of returning a real `404` for everything else.
 
 ## Deliberately not done
 

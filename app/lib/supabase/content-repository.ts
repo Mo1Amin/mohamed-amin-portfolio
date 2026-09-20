@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from './server';
+import { createSupabasePublicClient } from './public-client';
 
 export type PublicProjectTranslation = {
   locale: 'en' | 'ar' | 'sv';
@@ -38,7 +38,7 @@ const selection = [
  * error is logged on the server: it means the migrations are not applied yet.
  */
 export async function getPublicProjects(): Promise<PublicProjectRow[] | null> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   if (!supabase) return null;
 
   const { data, error } = await supabase
