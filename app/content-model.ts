@@ -11,6 +11,11 @@ export type ProjectContent = {
   shortSummary: TranslationMap;
   caseNote: TranslationMap;
   role: TranslationMap;
+  /** Case-study fields. Empty until Mohamed confirms the content. */
+  problem: TranslationMap;
+  solution: TranslationMap;
+  challenges: TranslationMap;
+  outcome: TranslationMap;
   technologies: string[];
   category: ProjectCategory[];
   status: ProjectStatus;
@@ -22,19 +27,23 @@ export type ProjectContent = {
 
 const text = (en: string, ar = en, sv = en): TranslationMap => ({ en, ar, sv });
 
+/** Unconfirmed case-study fields stay empty rather than being filled in. */
+const pending = (): TranslationMap => text('');
+const caseStudyPending = () => ({ problem: pending(), solution: pending(), challenges: pending(), outcome: pending() });
+
 /** Factual seed data. Empty links and media stay empty until Mohamed confirms them. */
 export const projectCatalog: ProjectContent[] = [
   {
     id: 'med-notes', slug: 'med-notes', title: text('Med Notes'),
     shortSummary: text('Project details are being prepared.'), caseNote: text('This project remains unpublished until its content is verified.'), role: text('Details to be confirmed.'),
     technologies: [], category: ['mobile', 'product'], status: 'coming_soon', featured: true, order: 1,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
   {
     id: 'myqat', slug: 'myqat', title: text('MyQat'),
     shortSummary: text('Project details are being prepared.'), caseNote: text('This project remains unpublished until its content is verified.'), role: text('Details to be confirmed.'),
     technologies: [], category: ['web', 'product'], status: 'coming_soon', featured: true, order: 2,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
   {
     id: 'su-acm-website', slug: 'su-acm-website', title: text('SU ACM official website', 'الموقع الرسمي لـ SU ACM', 'SU ACM:s officiella webbplats'),
@@ -42,7 +51,7 @@ export const projectCatalog: ProjectContent[] = [
     caseNote: text('Live URL and implementation details will be added after verification.', 'سيُضاف رابط الموقع وتفاصيل التنفيذ بعد التحقق منها.', 'Live-URL och implementationsdetaljer läggs till efter verifiering.'),
     role: text('Founder and responsible for the official website and web activities.', 'مؤسس الفرع ومسؤول الموقع الرسمي وأنشطة الويب.', 'Grundare och ansvarig för den officiella webbplatsen och webbarbetet.'),
     technologies: [], category: ['web', 'leadership'], status: 'in_development', featured: true, order: 3,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
   {
     id: 'graduation-ml-fitness-health', slug: 'graduation-ml-fitness-health', title: text('Fitness × Intelligence', 'اللياقة × الذكاء', 'Träning × Intelligens'),
@@ -50,25 +59,25 @@ export const projectCatalog: ProjectContent[] = [
     caseNote: text('GitHub and Google Play releases are planned.', 'يُخطط لنشر المشروع على GitHub وGoogle Play.', 'Publicering på GitHub och Google Play planeras.'),
     role: text('Team leader. The project received an A+ grade.', 'قائد الفريق. حصل المشروع على تقدير A+.', 'Teamledare. Projektet fick betyget A+.'),
     technologies: ['Flutter', 'Machine Learning', 'Fitness and Health'], category: ['mobile', 'ai_ml'], status: 'coming_soon', featured: true, order: 4,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
   {
     id: 'flight-web', slug: 'flight-web', title: text('Flight Web'),
     shortSummary: text('Flight booking, hotels, and rental cars at competitive prices.'), caseNote: text('This project is private and is not returned by public queries.'), role: text('Details to be confirmed.'),
     technologies: ['HTML', 'CSS', 'JavaScript'], category: ['web'], status: 'private', featured: false, order: 5,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
   {
     id: 'speed-store', slug: 'speed-store', title: text('Speed Store'),
     shortSummary: text('A store for games and in-game items.'), caseNote: text('This project is private and is not returned by public queries.'), role: text('Details to be confirmed.'),
     technologies: ['HTML', 'CSS', 'JavaScript', 'Node.js', 'MySQL'], category: ['web', 'backend'], status: 'private', featured: false, order: 6,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
   {
     id: 'spark-motors', slug: 'spark-motors', title: text('Spark Motors'),
     shortSummary: text('A website for selling cars and editing information about cars and motorcycles.'), caseNote: text('This project is private and is not returned by public queries.'), role: text('Details to be confirmed.'),
     technologies: ['HTML', 'CSS', 'JavaScript'], category: ['web'], status: 'private', featured: false, order: 7,
-    links: {}, media: [],
+    ...caseStudyPending(), links: {}, media: [],
   },
 ];
 

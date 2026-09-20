@@ -21,7 +21,7 @@ type RouteCopy = {
   technologyFallback: string;
   backToProjects: string;
   footerLine: string;
-  status: Record<'coming' | 'development', string>;
+  status: Record<'published' | 'coming_soon' | 'in_development', string>;
   loadingLabel: string;
   loading: string;
   notFoundEyebrow: string;
@@ -49,7 +49,7 @@ export const routeCopy: Record<Locale, RouteCopy> = {
     technologyFallback: 'Details to be confirmed',
     backToProjects: 'Back to projects',
     footerLine: 'Mohamed Amin · Software Engineer',
-    status: { coming: 'Coming soon', development: 'In development' },
+    status: { published: 'Published', coming_soon: 'Coming soon', in_development: 'In development' },
     loadingLabel: 'Loading portfolio',
     loading: 'Loading the next chapter',
     notFoundEyebrow: 'This page is still being built',
@@ -76,7 +76,7 @@ export const routeCopy: Record<Locale, RouteCopy> = {
     technologyFallback: 'التفاصيل قيد التأكيد',
     backToProjects: 'العودة إلى المشاريع',
     footerLine: 'محمد أمين · مهندس برمجيات',
-    status: { coming: 'قريبًا', development: 'قيد التطوير' },
+    status: { published: 'منشور', coming_soon: 'قريبًا', in_development: 'قيد التطوير' },
     loadingLabel: 'جارٍ تحميل الموقع',
     loading: 'جارٍ تحميل الفصل التالي',
     notFoundEyebrow: 'هذه الصفحة ما زالت قيد البناء',
@@ -103,7 +103,7 @@ export const routeCopy: Record<Locale, RouteCopy> = {
     technologyFallback: 'Detaljer ska bekräftas',
     backToProjects: 'Tillbaka till projekten',
     footerLine: 'Mohamed Amin · Mjukvaruingenjör',
-    status: { coming: 'Kommer snart', development: 'Under utveckling' },
+    status: { published: 'Publicerad', coming_soon: 'Kommer snart', in_development: 'Under utveckling' },
     loadingLabel: 'Laddar portfolion',
     loading: 'Laddar nästa kapitel',
     notFoundEyebrow: 'Den här sidan byggs fortfarande',

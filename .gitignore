@@ -25,3 +25,6 @@ artifacts/
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Supabase CLI local state (never commit linked project credentials)
+supabase/.temp/

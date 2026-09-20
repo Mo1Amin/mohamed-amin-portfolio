@@ -29,7 +29,10 @@ export async function POST(request: Request) {
   if (uploadError) return NextResponse.json({ error: uploadError.message }, { status: 400 });
   const { data: publicUrl } = supabase.storage.from('portfolio-media').getPublicUrl(path);
   const localeAlt = (form.get('altEn') as string | null) ?? '';
-  const { data: media, error: mediaError } = await supabase.from('project_media').insert({ project_id: project.id, kind, url: publicUrl.publicUrl, alt_en: localeAlt, alt_ar: (form.get('altAr') as string | null) ?? localeAlt, alt_sv: (form.get('altSv') as string | null) ?? localeAlt }).select('id, url, kind').single();
+  // New media goes after what is already there; without this every row shared
+  // sort_order 0 and the public order was undefined.
+  const { count } = await supabase.from('project_media').select('id', { count: 'exact', head: true }).eq('project_id', project.id);
+  const { data: media, error: mediaError } = await supabase.from('project_media').insert({ project_id: project.id, kind, url: publicUrl.publicUrl, sort_order: count ?? 0, alt_en: localeAlt, alt_ar: (form.get('altAr') as string | null) ?? localeAlt, alt_sv: (form.get('altSv') as string | null) ?? localeAlt }).select('id, url, kind').single();
   if (mediaError) {
     await supabase.storage.from('portfolio-media').remove([path]);
     return NextResponse.json({ error: mediaError.message }, { status: 400 });

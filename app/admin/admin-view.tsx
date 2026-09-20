@@ -3,11 +3,34 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { RouteControls } from '../route-controls';
-import { projectCatalog, projectStatusLabels, type ProjectContent, type ProjectStatus } from '../content-model';
+import { projectCatalog, projectStatusLabels, type ProjectContent, type ProjectStatus, type TranslationMap } from '../content-model';
 import { createSupabaseBrowserClient } from '../lib/supabase/client';
 
 const draftKey = 'amin-portfolio-admin-drafts-v1';
 const statusOptions: ProjectStatus[] = ['published', 'coming_soon', 'private', 'in_development'];
+
+/** Fields stored per locale in `project_translations`. */
+type TranslatedKey = 'role' | 'caseNote' | 'problem' | 'solution' | 'challenges' | 'outcome';
+const caseStudyFields: { key: TranslatedKey; label: string }[] = [
+  { key: 'role', label: 'Role' },
+  { key: 'caseNote', label: 'Case note' },
+  { key: 'problem', label: 'Problem' },
+  { key: 'solution', label: 'Solution' },
+  { key: 'challenges', label: 'Challenges' },
+  { key: 'outcome', label: 'Outcome' },
+];
+const localeFields: { locale: keyof TranslationMap; label: string }[] = [
+  { locale: 'en', label: 'English' },
+  { locale: 'ar', label: 'العربية' },
+  { locale: 'sv', label: 'Svenska' },
+];
+type LinkKey = keyof ProjectContent['links'];
+const linkFields: { key: LinkKey; label: string; placeholder: string }[] = [
+  { key: 'github', label: 'GitHub link', placeholder: 'https://github.com/...' },
+  { key: 'live', label: 'Live link', placeholder: 'https://...' },
+  { key: 'googlePlay', label: 'Google Play link', placeholder: 'https://play.google.com/...' },
+  { key: 'testFlight', label: 'TestFlight link', placeholder: 'https://testflight.apple.com/...' },
+];
 
 function cloneCatalog() {
   return structuredClone(projectCatalog);
@@ -116,11 +139,21 @@ export function AdminView() {
           <label className="editor-wide">English summary<textarea value={selected.shortSummary.en} onChange={(event) => updateSelected({ shortSummary: { ...selected.shortSummary, en: event.target.value } })} /></label>
           <label className="editor-wide">Arabic summary<textarea dir="rtl" value={selected.shortSummary.ar} onChange={(event) => updateSelected({ shortSummary: { ...selected.shortSummary, ar: event.target.value } })} /></label>
           <label className="editor-wide">Swedish summary<textarea value={selected.shortSummary.sv} onChange={(event) => updateSelected({ shortSummary: { ...selected.shortSummary, sv: event.target.value } })} /></label>
-          <label>Role<input value={selected.role.en} onChange={(event) => updateSelected({ role: { ...selected.role, en: event.target.value } })} /></label>
-          <label>Technologies<input value={selected.technologies.join(', ')} onChange={(event) => updateSelected({ technologies: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) })} /></label>
-          <label>GitHub link<input type="url" placeholder="https://github.com/..." value={selected.links.github ?? ''} onChange={(event) => updateSelected({ links: { ...selected.links, github: event.target.value || undefined } })} /></label>
-          <label>Live link<input type="url" placeholder="https://..." value={selected.links.live ?? ''} onChange={(event) => updateSelected({ links: { ...selected.links, live: event.target.value || undefined } })} /></label>
+          <label className="editor-wide">Technologies<input value={selected.technologies.join(', ')} placeholder="Comma separated. Leave empty until confirmed." onChange={(event) => updateSelected({ technologies: event.target.value.split(',').map((item) => item.trim()).filter(Boolean) })} /></label>
+          {linkFields.map(({ key, label, placeholder }) => <label key={key}>{label}<input type="url" dir="ltr" placeholder={placeholder} value={selected.links[key] ?? ''} onChange={(event) => updateSelected({ links: { ...selected.links, [key]: event.target.value || undefined } })} /></label>)}
         </div>
+
+        <section className="editor-case" aria-label="Case study fields">
+          <div><p className="eyebrow">CASE STUDY</p><p className="media-help">Each field is stored per language. Anything not confirmed yet stays empty, and an empty field is saved as empty.</p></div>
+          {caseStudyFields.map(({ key, label }) => <div className="editor-case-field" key={key}>
+            <h3>{label}</h3>
+            <div className="editor-grid editor-case-row">
+              {localeFields.map(({ locale, label: localeLabel }) => <label key={locale}>{localeLabel}
+                <textarea dir={locale === 'ar' ? 'rtl' : 'ltr'} value={selected[key][locale]} onChange={(event) => updateSelected({ [key]: { ...selected[key], [locale]: event.target.value } } as Partial<ProjectContent>)} />
+              </label>)}
+            </div>
+          </div>)}
+        </section>
         <div className="editor-foot"><label className="check-row"><input type="checkbox" checked={selected.featured} onChange={(event) => updateSelected({ featured: event.target.checked })} /> Featured project</label><span>{remoteStatus === 'error' ? remoteError : remoteStatus === 'saved' ? 'Saved to Supabase.' : saved ? 'Draft saved in this browser.' : 'Unsaved local changes.'}</span></div>
         <div className="media-editor"><div><p className="eyebrow">PROJECT MEDIA</p><p className="media-help">Upload an image or video after saving this project to Supabase. Files are limited to 10 MB.</p></div><div className="media-actions"><input type="file" accept="image/*,video/*" onChange={(event) => { setMediaFile(event.target.files?.[0] ?? null); setMediaStatus('idle'); }} /><button className="text-link" onClick={uploadMedia} disabled={!mediaFile || mediaStatus === 'uploading'}>{mediaStatus === 'uploading' ? 'Uploading…' : 'Upload media'} ↗</button></div>{selected.media.length > 0 && <ul className="media-list">{selected.media.map((media) => <li key={media.id}><a href={media.url} target="_blank" rel="noreferrer">{media.type} · {media.url}</a></li>)}</ul>}{mediaStatus === 'error' && <p className="auth-error">{remoteError}</p>}{mediaStatus === 'uploaded' && <p className="media-success">Media uploaded. Save the project again to keep the local draft in sync.</p>}</div>
       </article>
