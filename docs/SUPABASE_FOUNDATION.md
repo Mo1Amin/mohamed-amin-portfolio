@@ -17,8 +17,8 @@ configured, so local previews continue to use the checked-in content model.
 that rule in the database and gives write access only to the authenticated
 owner of each project.
 
-The next integration step is to replace the local admin draft actions with
-authenticated server mutations and Supabase Storage uploads. The current branch
-adds the first authentication layer: `/admin/login`, the OAuth callback route,
-and middleware that protects `/admin` whenever Supabase environment variables
-are present. Without those variables, local preview mode remains available.
+The admin workspace now includes an authenticated `PUT /api/admin/projects`
+mutation. It saves the selected project's status, featured flag, ordering,
+translations, technologies, and links while preserving local preview mode when
+Supabase is not configured. Media uploads and richer case-study fields remain
+as the next storage integration work.
