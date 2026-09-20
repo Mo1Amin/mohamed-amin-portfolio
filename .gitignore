@@ -22,3 +22,6 @@ Thumbs.db
 public/uploads/
 artifacts/
 
+
+# TypeScript incremental build cache
+*.tsbuildinfo

@@ -1,13 +1,28 @@
-import Link from 'next/link';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { projectIndexOf, slugs } from '../../projects-data';
+import { routeCopy } from '../../route-copy';
+import { defaultLocale } from '../../settings';
+import { CaseView } from './case-view';
 
-const projects: Record<string,{title:string;type:string;summary:string;role:string;technology:string[];status:string;note:string}> = {
-  'med-notes': { title:'Med Notes', type:'PROJECT PREVIEW', summary:'The full case study is being prepared. Verified project information will be published when the repository and media are ready.', role:'Details to be added.', technology:['Details to be confirmed'], status:'Coming soon', note:'This project remains unpublished until its content is verified.' },
-  'myqat': { title:'MyQat', type:'PROJECT PREVIEW', summary:'The full case study is being prepared. Verified project information will be published when the repository and media are ready.', role:'Details to be added.', technology:['Details to be confirmed'], status:'Coming soon', note:'This project remains unpublished until its content is verified.' },
-  'su-acm-website': { title:'SU ACM official website', type:'WEB · COMMUNITY', summary:'A digital home for the SU ACM Student Chapter, founded by Mohamed Amin. The project reflects his responsibility for the official website and web activities.', role:'Founder and responsible for the official website and web activities.', technology:['Web stack to be confirmed'], status:'In development', note:'Live URL and implementation details will be added after verification.' },
-  'graduation-ml-fitness-health': { title:'Fitness × Intelligence', type:'FLUTTER · MACHINE LEARNING', summary:'A Flutter mobile application and machine learning model for fitness and health. Mohamed led the team, and the project received an A+ result.', role:'Team leader and technical lead.', technology:['Flutter','Machine Learning','Fitness and Health'], status:'Coming soon', note:'GitHub and Google Play releases are planned.' },
-};
+export function generateStaticParams(){return slugs.map(slug=>({slug}))}
 
-export function generateStaticParams(){return Object.keys(projects).map(slug=>({slug}))}
-export async function generateMetadata({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const p=projects[slug];return p?{title:`${p.title} — Mohamed Amin`,description:p.summary}:{title:'Project — Mohamed Amin'}}
-export default async function ProjectPage({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const p=projects[slug];if(!p)notFound();return <main className="case-page"><header className="route-header"><Link className="brand" href="/">ma<span>↗</span></Link><Link className="text-link" href="/projects">← All projects</Link></header><section className="case-hero"><p className="eyebrow"><span className="dot" />{p.type}</p><h1>{p.title}<em>.</em></h1><p className="case-lead">{p.summary}</p><div className="case-meta"><div><small>STATUS</small><strong>{p.status}</strong></div><div><small>MY ROLE</small><strong>{p.role}</strong></div></div></section><section className="case-grid"><article><p className="eyebrow">01 / The story</p><h2>Evidence first.<br /><em>Details when ready.</em></h2><p>{p.note}</p></article><article><p className="eyebrow">02 / Technologies</p><ul>{p.technology.map(item=><li key={item}>{item}<span>↗</span></li>)}</ul></article></section><footer className="case-footer"><Link className="primary" href="/projects">Back to projects <span>↗</span></Link><p>Mohamed Amin · Software Engineer</p></footer></main>}
+// Without this an unknown slug was rendered on demand and cached, so a missing
+// project answered 200 OK with the not-found screen inside it. Now anything
+// outside the known slugs is a real 404.
+export const dynamicParams=false;
+
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
+ const {slug}=await params; const index=projectIndexOf(slug);
+ if(index<0)return {title:'Project — Mohamed Amin'};
+ // Metadata is produced before the reader's language is known, so it uses the
+ // default locale — the same one the document is first rendered with.
+ const r=routeCopy[defaultLocale];
+ return {title:`${r.indexTitles[index]} — Mohamed Amin`,description:r.caseSummaries[index]};
+}
+
+export default async function ProjectPage({params}:{params:Promise<{slug:string}>}){
+ const {slug}=await params; const index=projectIndexOf(slug);
+ if(index<0)notFound();
+ return <CaseView index={index} />;
+}

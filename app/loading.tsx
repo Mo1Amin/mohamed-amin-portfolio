@@ -1,6 +1,10 @@
+'use client';
+import {usePreferences} from './preferences';
+import {routeCopy} from './route-copy';
 export default function Loading() {
-  return <main className="state-screen" aria-busy="true" aria-label="Loading portfolio">
+  const {locale}=usePreferences(); const r=routeCopy[locale];
+  return <main className="state-screen" aria-busy="true" aria-label={r.loadingLabel}>
     <div className="state-mark">ma<span>↗</span></div>
-    <p className="eyebrow"><span className="dot" />Loading the next chapter</p>
+    <p className="eyebrow"><span className="dot" />{r.loading}</p>
   </main>
 }
