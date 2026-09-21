@@ -25,3 +25,6 @@ artifacts/
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Installed locally from anthropics/claude-code (Anthropic terms, not redistributable)
+.claude/skills/frontend-design/
