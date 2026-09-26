@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { fillOutline, outline, smooth, type InkPoint } from "@/lib/ink/stroke";
+import { EraserIcon, PenIcon } from "../motion/icons";
+import { useIconMotion } from "../motion/MotionLink";
 
 const BASE_WIDTH = 3.4;
 const DRY_AFTER_MS = 9000;
@@ -191,22 +193,31 @@ export function InkLayer({ id, className, labelledBy, children }: Props) {
 
 export function PenControl({ labels }: { labels: { on: string; off: string; clear: string; active: string } }) {
   const { penOn, setPenOn, hasInk, clear } = useInk();
+  const pen = useIconMotion();
+  const eraser = useIconMotion();
 
   return (
     <div className="pen-control" data-no-ink>
-      <button type="button" className="pen-button" aria-pressed={penOn} onClick={() => setPenOn(!penOn)}>
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-          <path d="M14.5 4.5l5 5L9 20H4v-5L14.5 4.5z" />
-          <path d="M12.5 6.5l5 5" />
-        </svg>
+      <button
+        type="button"
+        className="pen-button"
+        aria-pressed={penOn}
+        {...pen.handlers}
+        onClick={() => setPenOn(!penOn)}
+      >
+        <PenIcon ref={pen.icon} />
         <span>{penOn ? labels.off : labels.on}</span>
       </button>
       {hasInk && (
-        <button type="button" className="pen-button pen-clear" onClick={clear} aria-label={labels.clear} title={labels.clear}>
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-            <path d="M4 20h9M7.5 16.5l-3-3a1.5 1.5 0 0 1 0-2.1l7.9-7.9a1.5 1.5 0 0 1 2.1 0l4.5 4.5a1.5 1.5 0 0 1 0 2.1L12 17.1" />
-            <path d="M9.5 8.5l6 6" />
-          </svg>
+        <button
+          type="button"
+          className="pen-button pen-clear"
+          {...eraser.handlers}
+          onClick={clear}
+          aria-label={labels.clear}
+          title={labels.clear}
+        >
+          <EraserIcon ref={eraser.icon} />
         </button>
       )}
       <p className="visually-hidden" role="status">

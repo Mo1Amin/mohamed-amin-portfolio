@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { copyFor, locales, pathFor, type Locale } from "@/content";
-import { themeScript } from "@/components/ThemeToggle";
+import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({

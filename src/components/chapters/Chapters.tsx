@@ -4,6 +4,7 @@ import { outline, outlineToSvgPath, smooth } from "@/lib/ink/stroke";
 import { Annotated } from "../Annotated";
 import { LotyMark, MasarMark, NordsurMark } from "../brands/Marks";
 import { InkLayer, PenControl } from "../ink/InkLayer";
+import { Squish } from "../motion/Squish";
 import { ProjectMeta, ProjectText } from "./ProjectText";
 
 const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/projects/${path}`;
@@ -32,15 +33,17 @@ export function NuvinkChapter({ copy }: { copy: Copy }) {
     <InkLayer id="nuvink" className="chapter chapter-nuvink" labelledBy="nuvink-name">
       <div className="chapter-inner">
         <header className="chapter-head">
-          <img
-            className="nuvink-mark"
-            src={asset("nuvink-mark.webp")}
-            alt={nuvink.markAlt}
-            width={480}
-            height={334}
-            loading="lazy"
-            decoding="async"
-          />
+          <Squish>
+            <img
+              className="nuvink-mark"
+              src={asset("nuvink-mark.webp")}
+              alt={nuvink.markAlt}
+              width={480}
+              height={334}
+              loading="lazy"
+              decoding="async"
+            />
+          </Squish>
           <div>
             <h3 id="nuvink-name" className="chapter-name">
               {nuvink.name}
@@ -92,7 +95,9 @@ export function NordsurChapter({ copy }: { copy: Copy }) {
     <section id="nordsur" className="chapter chapter-nordsur" aria-labelledby="nordsur-name">
       <div className="chapter-inner">
         <header className="chapter-head">
-          <NordsurMark size={56} />
+          <Squish>
+            <NordsurMark size={56} />
+          </Squish>
           <div>
             <h3 id="nordsur-name" className="chapter-name">
               {nordsur.name}
@@ -127,7 +132,9 @@ export function MasarChapter({ copy }: { copy: Copy }) {
     <section id="masar" className="chapter chapter-masar" aria-labelledby="masar-name">
       <div className="chapter-inner">
         <header className="chapter-head">
-          <MasarMark size={56} />
+          <Squish>
+            <MasarMark size={56} />
+          </Squish>
           <div>
             <h3 id="masar-name" className="chapter-name">
               {masar.name}
@@ -166,7 +173,9 @@ export function LotyChapter({ copy }: { copy: Copy }) {
     <section id="loty" className="chapter chapter-loty" aria-labelledby="loty-name">
       <div className="chapter-inner">
         <header className="chapter-head">
-          <LotyMark size={56} />
+          <Squish>
+            <LotyMark size={56} />
+          </Squish>
           <div>
             <h3 id="loty-name" className="chapter-name">
               {loty.name}
@@ -205,7 +214,9 @@ export function AcmChapter({ copy }: { copy: Copy }) {
     <section id="acm" className="chapter chapter-acm" aria-labelledby="acm-name">
       <div className="chapter-inner">
         <header className="chapter-head">
-          <img className="acm-logo" src={asset("acm-logo.webp")} alt="" width={240} height={240} loading="lazy" />
+          <Squish>
+            <img className="acm-logo" src={asset("acm-logo.webp")} alt="" width={240} height={240} loading="lazy" />
+          </Squish>
           <div>
             <h3 id="acm-name" className="chapter-name">
               {acm.name}

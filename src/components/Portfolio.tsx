@@ -3,6 +3,17 @@ import type { ReactNode } from "react";
 import { copyFor, locales, pathFor, type Locale } from "@/content";
 import { LotyMark, MasarMark, NordsurMark } from "./brands/Marks";
 import { AcmChapter, LotyChapter, MasarChapter, NordsurChapter, NuvinkChapter } from "./chapters/Chapters";
+import {
+  ArrowDownIcon,
+  ArrowOutIcon,
+  GithubIcon,
+  InstagramIcon,
+  MailIcon,
+  SendIcon,
+  WhatsappIcon,
+} from "./motion/icons";
+import { MotionLink } from "./motion/MotionLink";
+import { SquishLink } from "./motion/Squish";
 import { ThemeToggle } from "./ThemeToggle";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -53,12 +64,12 @@ export function Portfolio({ locale }: { locale: Locale }) {
         <div className="hero-intro">
           <p className="hero-lede">{hero.lede}</p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#work">
+            <MotionLink className="button button-primary" href="#work" icon={ArrowDownIcon} iconSize={18} iconAfter>
               {hero.primary}
-            </a>
-            <a className="button" href="#contact">
+            </MotionLink>
+            <MotionLink className="button" href="#contact" icon={MailIcon} iconSize={18} iconAfter>
               {hero.secondary}
-            </a>
+            </MotionLink>
           </div>
           <p className="hero-status">{hero.status}</p>
         </div>
@@ -67,13 +78,12 @@ export function Portfolio({ locale }: { locale: Locale }) {
           <ul>
             {index.map((project) => (
               <li key={project.id}>
-                <a href={`#${project.id}`}>
-                  <span className="project-index-mark">{project.mark}</span>
+                <SquishLink href={`#${project.id}`} mark={project.mark}>
                   <span className="project-index-text">
                     <span className="project-index-name">{project.name}</span>
                     <span className="project-index-role">{project.role}</span>
                   </span>
-                </a>
+                </SquishLink>
               </li>
             ))}
           </ul>
@@ -100,7 +110,9 @@ export function Portfolio({ locale }: { locale: Locale }) {
             <ul className="more-list">
               {more.items.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href}>{item.name}</a>
+                  <MotionLink href={item.href} icon={ArrowOutIcon} iconSize={16} iconAfter>
+                    {item.name}
+                  </MotionLink>
                   <p>{item.summary}</p>
                 </li>
               ))}
@@ -164,28 +176,28 @@ export function Portfolio({ locale }: { locale: Locale }) {
           </h2>
           <p className="contact-body">{contact.body}</p>
           <p className="contact-email">
-            <a href={`mailto:${email}`}>
+            <MotionLink href={`mailto:${email}`} icon={SendIcon} iconSize={36}>
               <bdi dir="ltr">{email}</bdi>
-            </a>
+            </MotionLink>
           </p>
           <ul className="contact-channels">
             <li>
-              <a href={whatsapp.href}>
+              <MotionLink href={whatsapp.href} icon={WhatsappIcon}>
                 <span>{contact.whatsapp}</span>
                 <bdi dir="ltr">{whatsapp.label}</bdi>
-              </a>
+              </MotionLink>
             </li>
             <li>
-              <a href={instagram.href}>
+              <MotionLink href={instagram.href} icon={InstagramIcon}>
                 <span>{contact.instagram}</span>
                 <bdi dir="ltr">{instagram.label}</bdi>
-              </a>
+              </MotionLink>
             </li>
             <li>
-              <a href={github.href} rel="me">
+              <MotionLink href={github.href} icon={GithubIcon} rel="me">
                 <span>{contact.github}</span>
                 <bdi dir="ltr">{github.label}</bdi>
-              </a>
+              </MotionLink>
             </li>
           </ul>
         </section>
@@ -193,7 +205,9 @@ export function Portfolio({ locale }: { locale: Locale }) {
 
       <footer className="shell footer">
         <p>© 2026 {copy.footer}</p>
-        <a href={source}>GitHub</a>
+        <MotionLink href={source} icon={GithubIcon} iconSize={16}>
+          GitHub
+        </MotionLink>
       </footer>
     </>
   );

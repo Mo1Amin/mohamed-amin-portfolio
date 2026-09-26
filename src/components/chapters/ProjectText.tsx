@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import type { Project } from "@/content/types";
+import { ArrowOutIcon, GithubIcon } from "../motion/icons";
+import { MotionLink } from "../motion/MotionLink";
 
 interface Props {
   project: Project;
@@ -34,9 +36,14 @@ export function ProjectText({ project, builtWith, summary, children }: Props) {
       {project.links && (
         <p className="chapter-links">
           {project.links.map((link) => (
-            <a key={link.href} href={link.href}>
+            <MotionLink
+              key={link.href}
+              href={link.href}
+              icon={link.href.includes("github.com") ? GithubIcon : ArrowOutIcon}
+              iconSize={18}
+            >
               {link.label}
-            </a>
+            </MotionLink>
           ))}
         </p>
       )}
