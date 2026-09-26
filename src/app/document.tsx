@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { copyFor, locales, pathFor, type Locale } from "@/content";
 import { themeScript } from "@/components/ThemeToggle";
@@ -23,6 +23,12 @@ const arabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-arabic",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -50,8 +56,8 @@ export function metadataFor(locale: Locale): Metadata {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f4f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d1424" },
+    { media: "(prefers-color-scheme: light)", color: "#eceef1" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f131b" },
   ],
 };
 
@@ -61,7 +67,7 @@ export function Document({ locale, children }: { locale: Locale; children: React
     <html
       lang={locale}
       dir={dir}
-      className={`${display.variable} ${text.variable} ${arabic.variable}`}
+      className={`${display.variable} ${text.variable} ${arabic.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
       <head>

@@ -7,15 +7,19 @@ export interface Metric {
   label: string;
 }
 
+export interface Link {
+  href: string;
+  label: string;
+}
+
 export interface Project {
-  id: string;
   name: string;
   role: string;
   period: string;
   summary: string;
-  details: string[];
+  points: string[];
   stack: string;
-  link?: { href: string; label: string };
+  links?: Link[];
 }
 
 export interface Principle {
@@ -38,20 +42,13 @@ export interface Copy {
     languages: Record<Locale, string>;
     themeToDark: string;
     themeToLight: string;
-    penOn: string;
-    penOff: string;
-    clearInk: string;
-    penHintPointer: string;
-    penHintTouch: string;
-    penActive: string;
-    viewSource: string;
+    projectIndex: string;
+    builtWith: string;
   };
   hero: {
     name: string;
     role: string;
-    ledeBefore: string;
-    ledeMark: string;
-    ledeAfter: string;
+    lede: string;
     primary: string;
     secondary: string;
     status: string;
@@ -59,23 +56,38 @@ export interface Copy {
   work: {
     heading: string;
     intro: string;
-    flagship: Project & { metrics: Metric[]; markAlt: string };
-    others: Project[];
   };
+  nuvink: Project & {
+    metrics: Metric[];
+    markAlt: string;
+    markPhrase: string;
+    pen: {
+      on: string;
+      off: string;
+      clear: string;
+      hintPointer: string;
+      hintTouch: string;
+      active: string;
+    };
+  };
+  nordsur: Project & { visualAlt: string };
+  loty: Project & { drift: Metric; visualAlt: string };
+  masar: Project & { meaning: string };
+  acm: Project & { visualAlt: string };
+  more: { heading: string; items: { name: string; summary: string; href: string }[] };
   principles: { heading: string; items: Principle[] };
   toolkit: { heading: string; groups: { name: string; items: string }[] };
   background: {
     heading: string;
     milestones: Milestone[];
-    leadershipHeading: string;
-    leadership: string;
     languagesHeading: string;
     languages: string[];
   };
   contact: {
     heading: string;
     body: string;
-    emailLabel: string;
+    whatsapp: string;
+    instagram: string;
     github: string;
   };
   footer: string;
