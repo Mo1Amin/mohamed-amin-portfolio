@@ -25,6 +25,7 @@ export const sv: Copy = {
     primary: "Se arbetet",
     secondary: "Hör av dig",
     status: "Bor i al-Sharqia, Egypten. Öppen för distansarbete, med full överlappning med centraleuropeisk arbetstid.",
+    photoAlt: "Porträtt av Mohamed Amin",
   },
   work: {
     heading: "Utvalda arbeten",

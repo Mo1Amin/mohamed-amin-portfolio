@@ -25,6 +25,7 @@ export const en: Copy = {
     primary: "See the work",
     secondary: "Get in touch",
     status: "Based in Al-Sharqia, Egypt. Open to remote work, with full overlap with Central European working hours.",
+    photoAlt: "Portrait of Mohamed Amin",
   },
   work: {
     heading: "Selected work",

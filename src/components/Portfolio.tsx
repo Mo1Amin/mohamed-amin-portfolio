@@ -12,6 +12,7 @@ import {
   WhatsappIcon,
 } from "./motion/icons";
 import { DotGrowGroup, DotGrowItem } from "./dots/DotGrow";
+import { DotPortrait } from "./dots/DotPortrait";
 import { DotText } from "./dots/DotText";
 import { PrincipleGlyph, type GlyphKind } from "./dots/PrincipleGlyph";
 import { RelayDots } from "./dots/RelayDots";
@@ -77,6 +78,9 @@ export function Portfolio({ locale }: { locale: Locale }) {
 
       <header id="top" className="hero shell">
         <p className="hero-role">{hero.role}</p>
+        <div className="hero-photo">
+          <DotPortrait src={`${basePath}/portrait.webp`} alt={hero.photoAlt} width={560} height={901} />
+        </div>
         <h1 className="hero-name">{hero.name}</h1>
         <div className="hero-intro">
           <p className="hero-lede">{hero.lede}</p>

@@ -53,6 +53,7 @@ export interface Copy {
     primary: string;
     secondary: string;
     status: string;
+    photoAlt: string;
   };
   work: {
     heading: string;
