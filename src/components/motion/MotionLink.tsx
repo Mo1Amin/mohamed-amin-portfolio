@@ -1,6 +1,5 @@
 "use client";
 
-import { useReducedMotion } from "motion/react";
 import { useRef, type ComponentType, type ReactNode, type Ref } from "react";
 import type { IconHandle } from "./icons";
 
@@ -8,11 +7,10 @@ type Icon = ComponentType<{ ref?: Ref<IconHandle>; size?: number; className?: st
 
 export function useIconMotion() {
   const icon = useRef<IconHandle>(null);
-  const reduced = useReducedMotion();
 
-  const play = (move: keyof IconHandle) => () => {
-    if (!reduced) icon.current?.[move]();
-  };
+  // Icon motions stay on with reduced motion: they are small, answer the
+  // visitor's own hover, and never move the page around them.
+  const play = (move: keyof IconHandle) => () => icon.current?.[move]();
 
   return {
     icon,

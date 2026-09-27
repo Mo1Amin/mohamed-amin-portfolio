@@ -16,6 +16,7 @@ export const sv: Copy = {
     themeToLight: "Byt till ljust tema",
     projectIndex: "Projekt",
     builtWith: "Byggt med",
+    source: "Källkod",
   },
   hero: {
     name: "Mohamed Amin",

@@ -16,6 +16,7 @@ export const ar: Copy = {
     themeToLight: "التبديل إلى الوضع الفاتح",
     projectIndex: "المشاريع",
     builtWith: "التقنيات",
+    source: "الكود المصدري",
   },
   hero: {
     name: "محمد أمين",

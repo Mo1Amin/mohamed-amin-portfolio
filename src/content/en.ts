@@ -16,6 +16,7 @@ export const en: Copy = {
     themeToLight: "Switch to light theme",
     projectIndex: "Projects",
     builtWith: "Built with",
+    source: "Source code",
   },
   hero: {
     name: "Mohamed Amin",

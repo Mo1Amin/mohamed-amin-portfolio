@@ -44,6 +44,7 @@ export interface Copy {
     themeToLight: string;
     projectIndex: string;
     builtWith: string;
+    source: string;
   };
   hero: {
     name: string;

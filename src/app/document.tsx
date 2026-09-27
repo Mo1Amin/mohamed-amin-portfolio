@@ -40,6 +40,7 @@ export function metadataFor(locale: Locale): Metadata {
     metadataBase: new URL(siteUrl),
     title: meta.title,
     description: meta.description,
+    icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/icon.svg` },
     alternates: {
       canonical: `${siteUrl}${pathFor(locale)}`,
       languages: Object.fromEntries(locales.map((code) => [code, `${siteUrl}${pathFor(code)}`])),

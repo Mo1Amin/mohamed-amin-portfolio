@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
 // Squash and stretch: the logo is pulled wide, snaps tall, and settles like
@@ -15,11 +15,10 @@ const stretch: Variants = {
 };
 
 export function Squish({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion();
   return (
     <motion.span
       className={className}
-      variants={reduced ? undefined : stretch}
+      variants={stretch}
       initial="rest"
       whileHover="play"
       whileTap="play"
@@ -31,12 +30,11 @@ export function Squish({ children, className }: { children: ReactNode; className
 }
 
 export function SquishLink({ href, mark, children }: { href: string; mark: ReactNode; children: ReactNode }) {
-  const reduced = useReducedMotion();
   return (
     <motion.a href={href} initial="rest" whileHover="play" whileFocus="play">
       <motion.span
         className="project-index-mark"
-        variants={reduced ? undefined : stretch}
+        variants={stretch}
         style={{ transformOrigin: "50% 100%" }}
       >
         {mark}
