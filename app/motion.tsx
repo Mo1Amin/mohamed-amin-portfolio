@@ -24,4 +24,19 @@ export function Parallax({ children, className }: { children: ReactNode; classNa
   return <motion.div className={className} style={{ y, rotate, opacity }}>{children}</motion.div>;
 }
 
+export function WildAtmosphere() {
+  const { scrollYProgress } = useScroll();
+  const rotation = useTransform(scrollYProgress, [0, 1], [-18, 260]);
+  const orbitScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.82, 1.12, 0.9]);
+  const lavaY = useTransform(scrollYProgress, [0, 0.45, 1], ['18%', '0%', '-12%']);
+
+  return <motion.div className="wild-atmosphere" aria-hidden="true">
+    <motion.div className="wild-orbit wild-orbit-a" style={{ rotate: rotation, scale: orbitScale }} />
+    <motion.div className="wild-orbit wild-orbit-b" style={{ rotate: rotation, scale: orbitScale }} />
+    <motion.div className="wild-volcano" style={{ y: lavaY }}><span className="wild-lava" /><span className="wild-smoke wild-smoke-a" /><span className="wild-smoke wild-smoke-b" /></motion.div>
+    <span className="wild-rock wild-rock-a" /><span className="wild-rock wild-rock-b" /><span className="wild-rock wild-rock-c" /><span className="wild-rock wild-rock-d" />
+    <span className="wild-signal wild-signal-a">01</span><span className="wild-signal wild-signal-b">AI</span><span className="wild-signal wild-signal-c">∞</span>
+  </motion.div>;
+}
+
 export { motion };
